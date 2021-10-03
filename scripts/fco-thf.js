@@ -18,25 +18,28 @@ Hooks.on("renderExtraSheet", (app, html) => {
         let bselected = "";
         let pselected = "";
         let sselected = "";
+        let iselected = "";
 
         let enabled;
 
         if (app.document.isOwner) enabled = `enabled = "enabled"`;
         if (!app.document.isOwner) enabled = `disabled = "disabled"`;
 
-        if (type == "Bio") bselected = 'selected = selected';
+        if (type == "Biomorph") bselected = 'selected = selected';
         if (type == "Pod") pselected = 'selected = selected';
-        if (type == "Synth") sselected = 'selected = selected';
+        if (type == "Synthmorph") sselected = 'selected = selected';
+        if (type == "Infomorph") iselected = 'selected = selected';
 
         let calc_dur = "";
-        if (app.actor && app.actor.isOwner) calc_dur=`<button type="button" style="background-color:white; height:25px; width:35px" i icon class = "fas fa-calculator fco-thf-calc_dur" title="Calculate Durabilty" data-uuid="${app.object.uuid}"></button>`
+        if (app.actor && app.actor.type!="Thing" && app.actor.isOwner) calc_dur=`<button type="button" style="background-color:white; height:25px; width:35px" i icon class = "fas fa-calculator fco-thf-calc_dur" title="Calculate Durabilty" data-uuid="${app.object.uuid}"></button>`
 
         $('div[class="fco-extra-r"]').after(
             `
                 <strong>Morph Type:</strong> <select type="text" ${enabled} class="fco-thf-morph_type" data-uuid="${app.object.uuid}" style="background-color:white">
-                                <option ${bselected} value="Bio">Bio</option>
+                                <option ${bselected} value="Biomorph">Biomorph</option>
                                 <option ${pselected} value="Pod">Pod</option>
-                                <option ${sselected} value="Synth">Synth</option>
+                                <option ${sselected} value="Synthmorph">Synthmorph</option>
+                                <option ${iselected} value="Infomorph">Infomorph</option>
                             </select>
                 <strong style="padding-left:20px">Max Durability:</strong> <input ${enabled} data-uuid="${app.object.uuid}" type="number" class="fco-thf-max_durability" value="${dur}" style="background-color:white; max-width:4rem"></input>
                 ${calc_dur}
@@ -65,25 +68,30 @@ Hooks.once("ready", async () => {
     $(document).on('click', '.fco-thf-calc_dur',async event => 
     {
         let item = await fromUuid (event.target.getAttribute("data-uuid"));
-        let dur = duplicate(item.skills["Durability"]);
-        let morph_details = duplicate(item.getFlag("fco-thf","morph_details"));
-        if (!morph_details) morph_details = {morph_type:"Biomorph", maximum_durability:1};
-        if (!dur) dur = {"name":"Durability","rank":morph_details.maximum_durability, "description":"","overcome":"","caa":"","attack":"","defend":"","pc":true}
+        let morph_details = item.getFlag("fco-thf","morph_details");
+        
+        if (!morph_details) morph_details = {morph_type:"Bio", maximum_durability:1};
+        
         let morph_type = morph_details.morph_type;
         let maximum_durability = morph_details.maximum_durability;
 
-        if (morph_type == "Synth"){
+        let dur = item.data.data.skills["Durability"];
+
+        if (!dur) {
+            dur = {"name":"Durability","rank":morph_details.maximum_durability, "description":"","overcome":"","caa":"","attack":"","defend":"","pc":true}
+        } else {
+            dur = duplicate(dur);
+        }
+
+        if (morph_type == "Synthmorph" || morph_type == "Infomorph"){
             dur.rank = parseInt(maximum_durability);
         }
 
-        if (morph_type == "Pod" || morph_type == "Bio"){
+        if (morph_type == "Pod" || morph_type == "Biomorph"){
             let somatics = parseInt(item.actor.data.data.skills["Somatics"].rank);
             if (somatics < maximum_durability) dur.rank = somatics;
             if (somatics > maximum_durability) dur.rank = parseInt(maximum_durability);
         }
         await item.update({"data.skills":{["Durability"]:dur}});
-        this.render(false);
     })
 })
-
-//TODO: Ensure ability to try and trigger changes in data on extra only available if you're the owner
