@@ -13,7 +13,6 @@ Hooks.on("renderExtraSheet", (app, html) => {
         if (!morph_details) morph_details = {type:"Biomorph", maximum_durability:1};
         let type = morph_details.morph_type;
         let dur = morph_details.maximum_durability;
-        test
 
         $('div[class="fco-extra-r"]').after(
             `
