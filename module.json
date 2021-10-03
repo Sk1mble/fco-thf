@@ -1,0 +1,67 @@
+{
+  "name": "fco-thf",
+  "title": "Transhumanity's Fate Content Pack for Fate Core Official",
+  "description": "TBA",
+  "author": "Catalyst Game Studios and Richard Bellingham",
+  "authors": [],
+  "url": "TBA",
+  "version": "1.0.0",
+  "minimumCoreVersion": "0.8.4",
+  "compatibleCoreVersion": "9.224",
+  "scripts": [
+    "/scripts/fco-thf.js"
+  ],
+  "esmodules": [],
+  "styles": [
+  ],
+  "languages": [],
+  "packs": [
+    {
+      "name": "morphs",
+      "label": "Morphs (Transhumanity's Fate)",
+      "path": "/packs/morphs.db",
+      "entity": "Item",
+      "module": "fco-thf",
+      "private": false
+    },
+    {
+      "name": "extras",
+      "label": "Equipment and Muses (Transhumanity's Fate)",
+      "path": "/packs/extras.db",
+      "entity": "Item",
+      "module": "fco-thf",
+      "private": false
+    },
+    {
+      "name": "characters",
+      "label": "Sample Characters (Transhumanity's Fate)",
+      "path": "/packs/actors.db",
+      "entity": "Actor",
+      "module": "fco-thf",
+      "private": false
+    },
+    {
+      "name": "macros",
+      "label": "Macros (Transhumanity's Fate)",
+      "path": "/packs/macros.db",
+      "entity": "Macro",
+      "module": "fco-thf",
+      "private": false
+    },
+    {
+      "name": "journals",
+      "label": "Documents (Transhumanity's Fate)",
+      "path": "/packs/documents.db",
+      "entity": "JournalEntry",
+      "module": "fco-thf",
+      "private": false
+    }
+  ],
+  "system": "fate-core-official",
+  "dependencies": [],
+  "socket": false,
+  "manifest": "",
+  "protected": false,
+  "coreTranslation": false,
+  "library": false
+}
